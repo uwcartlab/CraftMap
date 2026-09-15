@@ -9,11 +9,10 @@
 
     let llb = new maplibregl.LngLatBounds([-170.20, 10.48, -32.46, 60.56]);
 
-
     //assign specific file protocol to the map
     protocol.add(p);
     //load style
-    fetch("data/style.json")
+    fetch("data/edited_style.json")
         .then(data => data.json())
         .then(function(d){
             //function to create map object
