@@ -1,4 +1,4 @@
-(function(){
+(function () {
     let map;
     //create pmtiles protocol
     const protocol = new pmtiles.Protocol();
@@ -14,16 +14,16 @@
     //load style
     fetch("data/edited_style.json")
         .then(data => data.json())
-        .then(function(d){
+        .then(function (d) {
             //function to create map object
             p.getHeader().then(h => {
                 map = new maplibregl.Map({
                     container: 'map',
                     zoom: 3,
-                    maxZoom:9,
-                    minZoom:3,
-                    maxBounds:llb,
-                    center: [-99.18,38.14],
+                    maxZoom: 9,
+                    minZoom: 3,
+                    maxBounds: llb,
+                    center: [-99.18, 38.14],
                     style: {
                         version: 8,
                         sources: {
@@ -36,29 +36,31 @@
                         layers: d.layers
                     }
                 });
-            //when style is finished loading, upload JSON points
-            }).then(function(){
-                 //upload JSON points
-                 fetch("data/locations_wip.geojson")
-                 .then(data => data.json())
-                 .then(function(json){
-                     console.log(json)
-                     map.addSource('locations', {
-                         'type': 'geojson',
-                         'data': json
-                     });
-                     map.addLayer({
-                         'id': 'locations_wip',
-                         'type': 'circle',
-                         'source': 'locations',
-                         'paint': {
-                             'circle-color': '#888888',
-                             'circle-stroke-color': 'blue',
-                             'circle-stroke-width':1,
-                             'circle-radius':2
-                         },
-                     });
-                 })
-            });
+                //when style is finished loading, upload JSON points  
+                map.on('load', () => {
+                    //upload JSON points
+                    fetch("data/locations_wip.geojson")
+                        .then(data => data.json())
+                        .then(function (json) {
+                            //add source from geojson file
+                            map.addSource('locations', {
+                                'type': 'geojson',
+                                'data': json
+                            });
+                            //add individual layer
+                            map.addLayer({
+                                'id': 'locations_wip',
+                                'type': 'circle',
+                                'source': 'locations',
+                                'paint': {
+                                    'circle-color': '#888888',
+                                    'circle-stroke-color': 'blue',
+                                    'circle-stroke-width': 1,
+                                    'circle-radius': 2
+                                },
+                            });
+                    })
+                })
+            })
         })
 })();
